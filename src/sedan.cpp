@@ -3,34 +3,70 @@
 
 static const std::array<double, 7> gear_ratios = {-1, 1, 2, 3, 4, 5, 6};
 
-Sedan::Sedan() : current_gear(0)
-{
-}
+// Car starts in gear -1 for some reason
+Sedan::Sedan() : current_gear(-1) {}
 
+// Shifts gear up
 void Sedan::shift_up()
 {
+    if(this->current_gear == -1){
+        this->current_gear = 1;
+    }
+    else if(this->current_gear < 6){
+        this->current_gear++;
+    }
 }
 
+// Shifts gear down
 void Sedan::shift_down()
 {
+   if(this->current_gear == 1){
+        this->current_gear = -1;
+   }
+   else if(this->current_gear > -1){
+        this->current_gear--;
+   }
 }
 
 double Sedan::get_torque(double engine_rpm, double throttle)
 {
-    return 0;
+    /* We approximated the needed constant torque of the engine by making a series for the velocity of the car where 
+    
+        v(torque)_{step+1} = v{step} + step*torque/(600kg*m*r), where v_0 = step*torque/(600kg*m*r)     (Derived by looking at the functions).
+
+    When step = 0.01s and we want a duration of 10s that is 1000*steps = 10s, we obtain v_{1000} = v{0} + 1999*0.01*torque/(600kg*m)
+    setting this to 32 m/s we obtain:
+    
+        1000*0.01*torque/(600kg*m*r) = 32 m/s => torque = 32*m/s*(600 kg*m*r)/10 = 1920 Nm.
+
+    Using the derived constant torque we create a more realistic simulation of the torque, slowly increasing our torque when the
+    engine rpm increases.
+    */
+    if(engine_rpm == 0){
+        return 1000*throttle;
+    }
+    else if(engine_rpm > 2500){
+        return 1500*throttle;
+    }
+    else{
+        return 1920*throttle;
+    } 
 }
 
 double Sedan::get_weight()
 {
-    return 1;
+    // Respectable weight of 2000kg for the car 
+    return 2000;
 }
 
 double Sedan::get_wheel_radius()
 {
-    return 1;
+    // Wheel radius of 0.3m 
+    return 0.3;
 }
 
 double Sedan::get_current_gear_ratio()
 {
-    return 1;
+    // Returns current gear ratio
+    return this->current_gear;
 }
