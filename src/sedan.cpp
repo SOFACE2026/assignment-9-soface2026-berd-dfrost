@@ -45,11 +45,11 @@ double Sedan::get_torque(double engine_rpm, double throttle)
     if(engine_rpm == 0){
         return 1000*throttle;
     }
-    else if(engine_rpm > 2500){
-        return 1500*throttle;
+    else if(engine_rpm < 2500){
+        return 1920*throttle;
     }
     else{
-        return 1920*throttle;
+        return 2067*throttle;
     } 
 }
 
