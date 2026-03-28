@@ -3,7 +3,7 @@
 
 static const std::array<double, 7> gear_ratios = {-1, 1, 2, 3, 4, 5, 6};
 
-// Car starts in gear -1 for some reason
+// Car starts in reverse
 Sedan::Sedan() : current_gear(0) {}
 
 // Shifts gear up
